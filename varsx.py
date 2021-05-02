@@ -1,5 +1,0 @@
-lhost = "localhost" 
-lport = "4962"
-pyoutfile = "pythonpayload.py"
-androutfile = "androidpayload.apk"
-winoutfile = "winpayload.exe"

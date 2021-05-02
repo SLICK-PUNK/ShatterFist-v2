@@ -35,11 +35,11 @@ banner= ('''@@@@@@   @@@  @@@   @@@@@@   @@@@@@@  @@@@@@@  @@@@@@@@  @@@@@@@   @
    :      :: : :::                                                                                    
                                   ''')
 
-lhost = varsx.lhost
-lport = varsx.lport
-pyoutfile = varsx.pyoutfile
-winoutfile = varsx.winoutfile
-androutfile = varsx.androutfile
+lhost = localhost
+lport = 4962
+pyoutfile = pythonpayload.py
+winoutfile = windowspayload.exe
+androutfile = androidpayload.apk
 defaultarch = "x86"
 talkbackm1 = "tcp"
 
