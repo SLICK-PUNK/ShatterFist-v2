@@ -7,11 +7,10 @@ import base64
 import random
 import string 
 import time 
-import sys 
 
 
-
-banner= ('''@@@@@@   @@@  @@@   @@@@@@   @@@@@@@  @@@@@@@  @@@@@@@@  @@@@@@@   @@@@@@@@  @@@   @@@@@@   @@@@@@@  
+banner= ('''
+@@@@@@   @@@  @@@   @@@@@@   @@@@@@@  @@@@@@@  @@@@@@@@  @@@@@@@   @@@@@@@@  @@@   @@@@@@   @@@@@@@  
 @@@@@@@   @@@  @@@  @@@@@@@@  @@@@@@@  @@@@@@@  @@@@@@@@  @@@@@@@@  @@@@@@@@  @@@  @@@@@@@   @@@@@@@  
 !@@       @@!  @@@  @@!  @@@    @@!      @@!    @@!       @@!  @@@  @@!       @@!  !@@         @@!    
 !@!       !@!  @!@  !@!  @!@    !@!      !@!    !@!       !@!  @!@  !@!       !@!  !@!         !@!    
@@ -69,9 +68,9 @@ def inputcopt(texxt):
     return dvhdnhhg
 def inputc(texxt):
     print("\n")
-    dvhdnhhg = input(colorama.Fore.LIGHTBLUE_EX + str(texxt) + colorama.Fore.GREEN).strip()
+    inputcy = input(colorama.Fore.LIGHTBLUE_EX + str(texxt) + colorama.Fore.GREEN).strip()
     print(colorama.Style.RESET_ALL)  
-    return dvhdnhhg    
+    return inputcy    
 
 def lask():
     global lhost, lport
@@ -223,13 +222,12 @@ def androidpayload():
     
 
 def menu():
-    printopt("Create a python payload (MSF)")
-    printopt("Create a windows payload (MSF)")
-    printopt("Create an android payload (MSF)")
+    printopt("Python payload menu")
+    printopt("Windows payload menu")
+    printopt("Android payload menu")
     #Option for Metasploit Console
     print(colorama.Fore.BLUE + "[" +  colorama.Style.RESET_ALL + "M" + colorama.Fore.BLUE + "] " + colorama.Fore.LIGHTBLUE_EX + "Start the Metasploit Framework Console" + colorama.Style.RESET_ALL)
-     print(colorama.Fore.BLUE + "[" +  colorama.Style.RESET_ALL + "E" + colorama.Fore.BLUE + "] " + colorama.Fore.LIGHTBLUE_EX + "Exit ShatterFist" + colorama.Style.RESET_ALL)
-    input1 = inputcopt("Option: ").strip().lower()
+    print(colorama.Fore.BLUE + "[" +  colorama.Style.RESET_ALL + "E" + colorama.Fore.BLUE + "] " + colorama.Fore.LIGHTBLUE_EX + "Exit ShatterFist" + colorama.Style.RESET_ALL)
     input1 = inputcopt("Option: ").strip().lower()
     if input1 == "1":
         pythonpayload()
@@ -258,6 +256,7 @@ def menu():
 def main():
     print (colorama.Fore.LIGHTRED_EX + banner +  colorama.Style.RESET_ALL)
     menu()
+colorama.init()    
 clearscreen()
 main()
 
