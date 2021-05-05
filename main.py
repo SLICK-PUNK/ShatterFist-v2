@@ -83,9 +83,9 @@ def payloadgen2(payloadandsession, lhost, lport, outfile, args1, args2):
     except subprocess.CalledProcessError:
         print(colorama.Fore.LIGHTRED_EX +  "An error has occured! Please read the above output and make sure you entered the options properly!" + colorama.Style.RESET_ALL)
     else: 
-        print(colorama.Fore.LIGHTGREEN_EX + f"#====================#\nDone! \nSaved as {outfile}\n(If no errors were encountered that is)\n#====================#\n\n" + colorama.Style.RESET_ALL)
+        print(colorama.Fore.LIGHTGREEN_EX + f"#====================#\nDone! \nSaved as {outfile}\n(If no errors were encountered that is)\n#====================#\n\n" + colorama.Style.RESET_ALL)  
     finally:
-         input(colorama.Fore.LIGHTBLUE_EX + "Press enter to continue" + colorama.Style.RESET_ALL)    
+        input(colorama.Fore.LIGHTBLUE_EX + "Press any key to continue" + colorama.Style.RESET_ALL)    
 def asktb():
     global n, talkbackm1 
     n = 1 
@@ -158,7 +158,8 @@ def pythonpayloadfud():
     file = open(pyoutfile, "w")
     file.write(outpy)
     file.close
-    time.sleep(2)
+    print(colorama.Fore.LIGHTGREEN_EX + f"#====================#\nDone! \nSaved as {pyoutfile}\n(If no errors were encountered that is)\n#====================#\n\n" + colorama.Style.RESET_ALL)  
+    input(colorama.Fore.LIGHTBLUE_EX + "Press any key to continue" + colorama.Style.RESET_ALL)    
     menu()
 
 def winpayload():                         
@@ -213,6 +214,7 @@ def androidpayload():
     
 def menu():
     clearscreen()
+    print (colorama.Fore.LIGHTRED_EX + banner +  colorama.Style.RESET_ALL)
     printopt("Python payload menu")
     printopt("Windows payload menu")
     printopt("Android payload menu")
@@ -246,7 +248,6 @@ def menu():
         menu()        
         
 def main():
-    print (colorama.Fore.LIGHTRED_EX + banner +  colorama.Style.RESET_ALL)
     time.sleep(0.1)
     menu()
 colorama.init()    
