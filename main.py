@@ -159,7 +159,8 @@ def pythonpayloadfud():
     file.write(outpy)
     file.close
     print(colorama.Fore.LIGHTGREEN_EX + f"#====================#\nDone! \nSaved as {pyoutfile}\n(If no errors were encountered that is)\n#====================#\n\n" + colorama.Style.RESET_ALL)  
-    input(colorama.Fore.LIGHTBLUE_EX + "Press any key to continue" + colorama.Style.RESET_ALL)    
+    input(colorama.Fore.LIGHTBLUE_EX + "Press any key to continue" + colorama.Style.RESET_ALL)   
+    n = 1  
     menu()
 
 def winpayload():                         
@@ -213,6 +214,8 @@ def androidpayload():
         androidpayload()   
     
 def menu():
+    global n 
+    n = 1
     clearscreen()
     print (colorama.Fore.LIGHTRED_EX + banner +  colorama.Style.RESET_ALL)
     printopt("Python payload menu")
@@ -251,8 +254,10 @@ def main():
     time.sleep(0.1)
     menu()
 colorama.init()    
-main()
-
+try:
+     main()
+except:
+    print(colorama.Fore.RED + "Whoops an error was encountered!" + colorama.Style.RESET_ALL)
 
 
     
