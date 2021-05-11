@@ -34,6 +34,20 @@ banner= ('''
    :      :: : :::                                                                                    
                                   ''')
 
+
+banner2 = ''' 
+  .dBBBBP   dBP dBP dBBBBBb  dBBBBBBP dBBBBBBP dBBBP dBBBBBb    dBBBBP dBP.dBBBBP dBBBBBBP
+  BP                     BB                              dBP              BP              
+  `BBBBb  dBBBBBP    dBP BB   dBP      dBP   dBBP    dBBBBK   dBBBP  dBP  `BBBBb   dBP    
+     dBP dBP dBP    dBP  BB  dBP      dBP   dBP     dBP  BB  dBP    dBP      dBP  dBP     
+dBBBBP' dBP dBP    dBBBBBBB dBP      dBP   dBBBBP  dBP  dB' dBP    dBP  dBBBBP'  dBP      '''   
+
+
+banner3 = '''
+╔═╗┬ ┬┌─┐┌┬┐┌┬┐┌─┐┬─┐╔═╗┬┌─┐┌┬┐
+╚═╗├─┤├─┤ │  │ ├┤ ├┬┘╠╣ │└─┐ │ 
+╚═╝┴ ┴┴ ┴ ┴  ┴ └─┘┴└─╚  ┴└─┘ ┴ '''
+
 lhost = "localhost"
 lport = "4962"
 pyoutfile = "pythonpayload.py"
@@ -214,7 +228,7 @@ def menu():
     global n 
     n = 1
     clearscreen()
-    print(colorama.Fore.LIGHTRED_EX + banner +  colorama.Style.RESET_ALL)
+    print(colorama.Fore.LIGHTRED_EX + banner3 +  colorama.Style.RESET_ALL)
     print(colorama.Style.BRIGHT + "BETA" + colorama.Style.RESET_ALL)
     print("\n")
     printopt("Python payload menu")
