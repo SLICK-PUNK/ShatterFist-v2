@@ -214,7 +214,9 @@ def menu():
     global n 
     n = 1
     clearscreen()
-    print (colorama.Fore.LIGHTRED_EX + banner +  colorama.Style.RESET_ALL)
+    print(colorama.Fore.LIGHTRED_EX + banner +  colorama.Style.RESET_ALL)
+    print(colorama.Style.BRIGHT + "BETA" + colorama.Style.RESET_ALL)
+    print("\n")
     printopt("Python payload menu")
     printopt("Windows payload menu")
     printopt("Android payload menu")
