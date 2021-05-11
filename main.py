@@ -60,15 +60,16 @@ def clearscreen():
     if sys.platform == "linux":
         subprocess.run("clear")
     elif sys.platform == "win32":
-        subprocess.run("cls")
+        subprocess.run("cls", shell=True)
 
 #For printopt func
 n = 1
 def printopt(texxt):  
     global n
-    print(colorama.Fore.BLUE + "[" +  colorama.Style.RESET_ALL + str(n) + colorama.Fore.BLUE + "] " + colorama.Fore.LIGHTBLUE_EX + texxt + colorama.Style.RESET_ALL)
+    print(colorama.Fore.BLUE +  "[" +  colorama.Fore.LIGHTWHITE_EX + str(n) + colorama.Fore.BLUE + "] " + colorama.Style.RESET_ALL + colorama.Fore.LIGHTBLUE_EX + texxt + colorama.Style.RESET_ALL)
     n += 1   
-
+def printopt2(opt, texxt):
+    print(colorama.Fore.BLUE +  "[" +  colorama.Fore.LIGHTWHITE_EX + str(opt) + colorama.Fore.BLUE + "] " + colorama.Style.RESET_ALL + colorama.Fore.LIGHTBLUE_EX + str(texxt) + colorama.Style.RESET_ALL)
 def printbannred(texxt):
     return print(colorama.Fore.LIGHTRED_EX +  "#=====+" + texxt + "+=====#" )
 
@@ -223,32 +224,41 @@ def androidpayload():
         print(colorama.Fore.LIGHTRED_EX + f"ERR: Option {inputy} is not valid" + colorama.Style.RESET_ALL) 
         time.sleep(2)
         androidpayload()   
-    
+def miscmenu():
+    print(colorama.Fore.LIGHTRED_EX + "NOT READY YET!!!" + colorama.Style.RESET_ALL)
+    time.sleep(2)
+    menu()    
+
 def menu():
     global n 
     n = 1
     clearscreen()
-    print(colorama.Fore.LIGHTRED_EX + banner3 +  colorama.Style.RESET_ALL)
+    print(colorama.Fore.LIGHTRED_EX + colorama.Style.BRIGHT + banner3 +  colorama.Style.RESET_ALL)
     print(colorama.Style.BRIGHT + "BETA" + colorama.Style.RESET_ALL)
     print("\n")
     printopt("Python payload menu")
     printopt("Windows payload menu")
     printopt("Android payload menu")
-    #Option for Metasploit Console
-    print(colorama.Fore.BLUE + "[" +  colorama.Style.RESET_ALL + "M" + colorama.Fore.BLUE + "] " + colorama.Fore.LIGHTBLUE_EX + "Start the Metasploit Framework Console" + colorama.Style.RESET_ALL)
-    print(colorama.Fore.BLUE + "[" +  colorama.Style.RESET_ALL + "E" + colorama.Fore.BLUE + "] " + colorama.Fore.LIGHTBLUE_EX + "Exit ShatterFist" + colorama.Style.RESET_ALL)
+    #printopt("Miscellaneous payloads")
+    printopt2("M", "Start the Metasploit Framework Console")
+    printopt2("E", "Exit ShatterFist")
     input1 = inputc("Option: ").strip().lower()
     if input1 == "1":
         time.sleep(0.1)
         pythonpayload()
+
     elif input1 == "2":
         winpayload()
+
     elif input1 == "3":
         androidpayload() 
+    elif input1 == "4":
+        miscmenu()
     elif input1 == "m" or input1 == "msfconsole":
         clearscreen()
         print(colorama.Fore.LIGHTRED_EX)
         subprocess.run("msfconsole")   
+    
     elif input1  == "e" or input1 == "exit":
         clearscreen()
         print(colorama.Fore.LIGHTRED_EX)
@@ -256,6 +266,8 @@ def menu():
         for letter in bye:
             print(letter,end="", flush=True)
             time.sleep(0.05)
+        print("")
+        time.sleep(0.1)
         sys.exit()
 
     else:
