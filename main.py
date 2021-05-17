@@ -276,19 +276,28 @@ def shell():
             shinput = input(colorama.Fore.RED + colorama.Fore.LIGHTRED_EX + "sfshell> " + Style.RESET_ALL).strip()
             if shinput == "exit":
                 loop = False
+            elif shinput == "search":
+                search()
             else:
-                print(colorama.Fore.BLUE + "[*]Exec" + shinput + colorama.Style.RESET_ALL )
+                print(colorama.Fore.BLUE + "[*]Exec " +  colorama.Fore.WHITE + shinput + colorama.Style.RESET_ALL )
                 subprocess.run(shinput, shell=True)
         except KeyboardInterrupt:
             print(colorama.Fore.BLUE + "[" + colorama.Fore.LIGHTWHITE_EX + "*" + colorama.Fore.BLUE  + "]" + colorama.Fore.LIGHTCYAN_EX + "Recieved INTR call exiting..." )
-            time.sleep(0.5)        
-
+            time.sleep(0.5)   
+    print(colorama.Fore.LIGHTRED_EX + "Exiting" + colorama.Style.RESET_ALL)   
+    time.sleep(0.2)          
+    menu()
 def search():
     searchstring =  inputc("Enter search string: ").strip()
-    matchingplds = [fplds for fplds in pldlist if searchstring in fplds ]  
+    matchingplds = [foundplds for foundplds in pldlist if searchstring in foundplds ]  
     for item in matchingplds:
         print(colorama.Fore.LIGHTRED_EX + "==>" + colorama.Fore.LIGHTWHITE_EX + item + colorama.Style.RESET_ALL)  
-    inputc("Press enter to return to menu ")   
+    inputc("Press enter to exit search")   
+
+def search2(searchstring):
+    matchingplds = [foundplds for foundplds in pldlist if searchstring in foundplds ]  
+    for item in matchingplds:
+        searchresult = print(colorama.Fore.LIGHTRED_EX + "==> " + colorama.Fore.LIGHTWHITE_EX + item + colorama.Style.RESET_ALL)    
 
 def menu():
     global n 
@@ -350,13 +359,14 @@ def menu():
         menu()    
 
 #first main code i didnt put inside a def wrapper lol
+#
 pldlist = []
 pldlist.append("[1] windows/meterpreter/reverse_tcp")
 pldlist.append("[2] windows/meterpreter/reverse_https")
-pldlist.append("windows/shell/reverse_tcp")
-pldlist.append("python/meterpreter/reverse_tcp") 
-pldlist.append("python/meterpreter/reverse_https")
-pldlist.append("python/shell_reverse_tcp") 
+pldlist.append("[3] windows/shell/reverse_tcp")
+pldlist.append("[4] python/meterpreter/reverse_tcp") 
+pldlist.append("[5] python/meterpreter/reverse_https")
+pldlist.append("[6] python/shell_reverse_tcp") 
 def main():
     #there for future stuff
     time.sleep(0.1)
