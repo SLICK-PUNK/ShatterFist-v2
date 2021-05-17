@@ -278,6 +278,11 @@ def shell():
                 loop = False
             elif shinput == "search":
                 search()
+            elif shinput == "list" or shinput == "help":
+                for element in cmdlist:
+                    print(colorama.Fore.LIGHTGREEN_EX + element + colorama.Style.RESET_ALL)
+
+                
             else:
                 print(colorama.Fore.BLUE + "[*]Exec " +  colorama.Fore.WHITE + shinput + colorama.Style.RESET_ALL )
                 subprocess.run(shinput, shell=True)
@@ -359,7 +364,9 @@ def menu():
         menu()    
 
 #first main code i didnt put inside a def wrapper lol
-#
+#===================
+#payload list 
+#====================
 pldlist = []
 pldlist.append("[1] windows/meterpreter/reverse_tcp")
 pldlist.append("[2] windows/meterpreter/reverse_https")
@@ -367,6 +374,14 @@ pldlist.append("[3] windows/shell/reverse_tcp")
 pldlist.append("[4] python/meterpreter/reverse_tcp") 
 pldlist.append("[5] python/meterpreter/reverse_https")
 pldlist.append("[6] python/shell_reverse_tcp") 
+#========================
+#command list 
+#========================
+cmdlist = []
+cmdlist.append("list - show this page")
+cmdlist.append("help - show this page")
+cmdlist.append("clear - clear screen")
+cmdlist.append("search -  search for compatible payloads")
 def main():
     #there for future stuff
     time.sleep(0.1)
