@@ -8,7 +8,6 @@ import random
 import string 
 import time
 
-from colorama.ansi import Style 
 
 
 banner= ('''
