@@ -281,17 +281,15 @@ def shell():
             elif shinput == "list" or shinput == "help":
                 for element in cmdlist:
                     print(colorama.Fore.LIGHTGREEN_EX + element + colorama.Style.RESET_ALL)
-
-                
             else:
-                print(colorama.Fore.BLUE + "[*]Exec " +  colorama.Fore.WHITE + shinput + colorama.Style.RESET_ALL )
+                print(colorama.Fore.BLUE + "[*]Exec " +  colorama.Fore.WHITE + shinput  + "\n" + colorama.Style.RESET_ALL )
                 subprocess.run(shinput, shell=True)
         except KeyboardInterrupt:
-            print(colorama.Fore.BLUE + "[" + colorama.Fore.LIGHTWHITE_EX + "*" + colorama.Fore.BLUE  + "]" + colorama.Fore.LIGHTCYAN_EX + "Recieved INTR call exiting..." )
-            time.sleep(0.5)   
-    print(colorama.Fore.LIGHTRED_EX + "Exiting" + colorama.Style.RESET_ALL)   
-    time.sleep(0.2)          
-    menu()
+            print( "\n" + colorama.Fore.BLUE + "[" + colorama.Fore.LIGHTWHITE_EX + "*" + colorama.Fore.BLUE  + "]" + colorama.Fore.LIGHTGREEN_EX + "Recieved INTR call exiting..." )
+            time.sleep(0.5) 
+            loop = False
+            menu()
+
 def search():
     searchstring =  inputc("Enter search string: ").strip()
     matchingplds = [foundplds for foundplds in pldlist if searchstring in foundplds ]  
@@ -374,14 +372,16 @@ pldlist.append("[3] windows/shell/reverse_tcp")
 pldlist.append("[4] python/meterpreter/reverse_tcp") 
 pldlist.append("[5] python/meterpreter/reverse_https")
 pldlist.append("[6] python/shell_reverse_tcp") 
+pldlist.append("[7] android/meterpreter/reverse_tcp")
+pldlist.append("[8] android/meterpreter/reverse_https")
 #========================
 #command list 
 #========================
 cmdlist = []
-cmdlist.append("list - show this page")
-cmdlist.append("help - show this page")
-cmdlist.append("clear - clear screen")
-cmdlist.append("search -  search for compatible payloads")
+cmdlist.append("[list] - show this page")
+cmdlist.append("[help] - show this page")
+cmdlist.append("[clear] - clear screen")
+cmdlist.append("[search] -  search for compatible payloads (just search not search <payload>!")
 def main():
     #there for future stuff
     time.sleep(0.1)
