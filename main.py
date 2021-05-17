@@ -272,7 +272,7 @@ def shell():
     loop = True
     while loop == True:
         try:
-            shinput = input(colorama.Fore.RED + colorama.Fore.LIGHTRED_EX + "sfshell> " + Style.RESET_ALL).strip()
+            shinput = input(colorama.Fore.RED + colorama.Fore.LIGHTRED_EX + "sfshell> " + colorama.Style.RESET_ALL).strip()
             if shinput == "exit":
                 loop = False
             elif shinput == "search":
