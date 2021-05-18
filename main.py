@@ -256,7 +256,9 @@ def linuxpayloadmenu():
     inputy2 = inputc(f"Enter file to save payload as. Leave empty for default {colorama.Fore.LIGHTRED_EX}({linuxoutfile}){colorama.Fore.BLUE}: ")
     asktb()
     #ASKARCH
-    arch = inputc(f"Enter payload arch (x86/x64). Leave empty for default {colorama.Fore.LIGHTRED_EX}({defaultarch}){colorama.Fore.BLUE}: ").strip()
+    archy = inputc(f"Enter payload arch (x86/x64). Leave empty for default {colorama.Fore.LIGHTRED_EX}({defaultarch}){colorama.Fore.BLUE}: ").strip()
+    if archy !=  "":
+        arch = archy
     if inputy2.strip() != "":
         linuxoutfile = inputy2
 
