@@ -380,6 +380,7 @@ def menu():
     #printopt2("C", "Custom payload")
     printopt2("M", "Start the Metasploit Framework Console")
     printopt2("E", "Exit ShatterFist")
+    print(f"Type {colorama.Style.BRIGHT}Exit {colorama.Style.RESET_ALL} to Exit.")
     input1 = inputc("Option: ").strip().lower()
     if input1 == "1":
         time.sleep(0.1)
