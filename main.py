@@ -8,7 +8,6 @@ import random
 import string 
 import time
 
-from colorama.ansi import Fore
 
 # Dev: SlickPunk666 (slick-punk)
 # Maintainer: SlickPunk666 (slick-punk)
